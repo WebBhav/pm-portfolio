@@ -7,9 +7,9 @@ import Link from 'next/link';
 import { FileText } from 'lucide-react';
 
 const paragraphs = [
-  "I'm a product thinker who blends data, design, AI, and strategy to build meaningful digital experiences.",
-  "I deep-dive into markets fast, turn insights into decisions, and ship 0–1 products with clarity. With years of hands-on design experience, I still sketch, wireframe, and build UI elements myself because great products are felt, not just specced.",
-  "Beyond the screen, I've led teams, founded IIT Ropar's first eSports community, revived campus culture post-COVID, and helped secure over ₹3M+ in sponsorships proof that I build systems that are beyond computers networks.",
+  "I get AI from demo to daily use.",
+  "At Moglix, I own AI product across procure-to-pay, from document AI to agent workflows. I've driven workflows from 0% to 83% net automation, reducing manual workload across teams.",
+  "Previously, I built AI content and ad-tech products at JustBaat, serving 400+ publishers. I turn complex AI capabilities into measurable business outcomes, balancing accuracy, cost, and user trust.",
   "Mechanical Engineering @ IIT Ropar. Born in Alwar. Driven by curiosity, craft, and impact."
 ];
 

@@ -1,7 +1,7 @@
 'use client';
 
 import type { ComponentProps } from 'react';
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import {
@@ -96,7 +96,48 @@ const MobileNavLink = ({
 const Header = () => {
   const { setIsLoading } = useLoading();
   const [isSheetOpen, setIsSheetOpen] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(false);
   const pathname = usePathname();
+
+  const containerRef = useRef<HTMLDivElement>(null);
+  const brandRef = useRef<HTMLDivElement>(null);
+  const navRef = useRef<HTMLElement>(null);
+  const actionsRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const checkCollision = () => {
+      if (!containerRef.current || !brandRef.current || !actionsRef.current) return;
+
+      const containerWidth = containerRef.current.clientWidth;
+      const brandWidth = brandRef.current.offsetWidth;
+      const actionsWidth = actionsRef.current.offsetWidth;
+      
+      // Known natural width of the 7 nav links with padding and gaps (~530px)
+      const navWidth = navRef.current ? Math.max(navRef.current.scrollWidth, 530) : 530;
+      
+      // Buffer of 48px to guarantee tabs NEVER touch any adjacent element
+      const availableSpace = containerWidth - brandWidth - actionsWidth;
+      const shouldCollapse = availableSpace < (navWidth + 48) || window.innerWidth < 1280;
+
+      setIsCollapsed(shouldCollapse);
+    };
+
+    checkCollision();
+
+    const observer = new ResizeObserver(() => {
+      checkCollision();
+    });
+
+    if (containerRef.current) {
+      observer.observe(containerRef.current);
+    }
+    window.addEventListener('resize', checkCollision);
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener('resize', checkCollision);
+    };
+  }, []);
 
   const handleNavigationClick = useCallback((e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     if (pathname === href) {
@@ -123,10 +164,10 @@ const Header = () => {
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60" suppressHydrationWarning>
       <div className="multicolor-line"></div>
-      <div className="container mx-auto flex h-16 items-center justify-between px-4 sm:px-6 md:grid md:grid-cols-3" suppressHydrationWarning>
+      <div ref={containerRef} className="container mx-auto flex h-16 items-center justify-between px-4 sm:px-6 relative" suppressHydrationWarning>
         
         {/* Left: Logo & Brand */}
-        <div className="flex justify-start items-center" suppressHydrationWarning>
+        <div ref={brandRef} className="flex justify-start items-center shrink-0 z-10" suppressHydrationWarning>
           <Link href="/" className="flex items-center space-x-2" onClick={(e) => handleNavigationClick(e, '/')} suppressHydrationWarning>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" className="h-6 w-6 text-accent">
               <rect width="256" height="256" fill="none"></rect>
@@ -138,8 +179,14 @@ const Header = () => {
         </div>
 
         {/* Center: Desktop Navigation */}
-        <div className="hidden md:flex justify-center items-center" suppressHydrationWarning>
-          <nav className="flex items-center space-x-1" suppressHydrationWarning>
+        <div 
+          className={cn(
+            "justify-center items-center flex-1 px-4 transition-opacity duration-150",
+            isCollapsed ? "hidden" : "hidden xl:flex"
+          )} 
+          suppressHydrationWarning
+        >
+          <nav ref={navRef} className="flex items-center space-x-1 lg:space-x-2 whitespace-nowrap" suppressHydrationWarning>
             {navLinks.map((link) => (
               <NavLink
                 key={link.href}
@@ -153,8 +200,8 @@ const Header = () => {
         </div>
 
         {/* Right: Actions */}
-        <div className="flex justify-end items-center gap-2 sm:gap-4" suppressHydrationWarning>
-          <Button asChild variant="default" size="sm" className="shadow-md hidden md:inline-flex">
+        <div ref={actionsRef} className="flex justify-end items-center gap-2 sm:gap-4 shrink-0 z-10" suppressHydrationWarning>
+          <Button asChild variant="default" size="sm" className="shadow-md hidden sm:inline-flex">
             <Link href="#contact" onClick={(e) => handleNavigationClick(e, '#contact')}>
               <Mail className="mr-2 h-4 w-4" /> Contact Me
             </Link>
@@ -162,7 +209,15 @@ const Header = () => {
 
           <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className="md:hidden">
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                className={cn(
+                  "hover:bg-accent/10 focus:ring-2 focus:ring-ring",
+                  isCollapsed ? "inline-flex" : "xl:hidden"
+                )}
+                aria-label="Toggle navigation menu"
+              >
                 <Menu className="h-6 w-6" />
                 <span className="sr-only">Toggle Menu</span>
               </Button>

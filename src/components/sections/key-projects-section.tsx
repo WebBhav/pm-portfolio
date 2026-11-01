@@ -99,17 +99,18 @@ const KeyProjectsSection = () => {
         </p>
         <div className="multicolor-line mt-6 mb-12 w-24 mx-auto"></div>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
         {keyProjects.map((project, index) => (
           <Card key={index} className="flex flex-col overflow-hidden bg-card hover:shadow-xl transition-shadow duration-300">
-             <Image
-               src={project.imageUrl}
-               alt={project.title}
-               width={400}
-               height={200}
-               className="w-full h-48 object-cover"
-               data-ai-hint={project.aiHint}
-             />
+             <div className="relative aspect-video w-full group overflow-hidden">
+               <Image
+                 src={project.imageUrl}
+                 alt={project.title}
+                 fill
+                 className="object-cover transition-transform duration-500 group-hover:scale-105"
+                 data-ai-hint={project.aiHint}
+               />
+             </div>
             <CardHeader className="pb-2">
                <div className="flex items-center justify-between mb-1">
                    <div className="flex items-center gap-3">
@@ -127,7 +128,7 @@ const KeyProjectsSection = () => {
                 </div>
             </CardHeader>
             <CardContent className="flex-grow">
-              <CardDescription as="div">
+              <CardDescription>
                 <ReadMore text={project.description} />
               </CardDescription>
             </CardContent>

@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { ExternalLink, Bot, Mail, Workflow, ZoomIn, ZoomOut, Maximize2, BrainCircuit, Sparkles, Sun, ChevronDown } from 'lucide-react';
+import { ExternalLink, Bot, Mail, Workflow, ZoomIn, ZoomOut, Maximize2, BrainCircuit, Sparkles, Sun, ChevronDown, BarChart } from 'lucide-react';
 import Image from 'next/image';
 import ReadMore from '@/components/ui/read-more';
 import {
@@ -912,6 +912,16 @@ const ArgSystemFlow = () => {
 
 const projects = [
   {
+    title: 'BucketAI | AI',
+    date: 'November 2026',
+    description: 'Developed an AI-powered spreadsheet bucketisation tool that transforms unstructured text remarks in Excel and CSV files into meaningful, business-ready categories. Users can upload workbooks, select specific worksheets, map primary-key and remarks columns, and apply custom filters using conditional logic. The system uses local semantic embeddings and clustering to identify patterns, group similar remarks, and generate configurable buckets without sending raw spreadsheet data to external services. An optional Gemini-powered layer refines bucket names and descriptions while preserving the underlying classifications. It provides bucket-level summaries, confidence scores, review indicators, and interactive pie/bar charts, including a separate category for blank or missing remarks. The enriched Excel export adds bucket assignments to the selected worksheet and generates a dedicated summary sheet with charts. Designed for large datasets with browser-based processing, privacy-conscious architecture, and support for multi-sheet workbooks.',
+    imageUrl: '/BucketAI.jpg',
+    projectUrl: 'https://bucket-ai.netlify.app/',
+    tags: ['AI', 'Data Analytics', 'Excel Automation', 'LLM', 'ONNX'],
+    icon: <BarChart className="h-6 w-6 text-accent" />,
+    aiHint: "ai spreadsheet bucketisation clustering tool",
+  },
+  {
     title: 'AutoFill AI | AI',
     date: 'October 2026',
     description: "Developed an AI-powered Chrome extension that automatically fills web forms and job applications using a personal profile built from the user's resume. The system reads an uploaded PDF with an LLM (Gemini, OpenAI, Anthropic or any OpenAI-compatible provider, using the user's own API key) and generates a structured, editable profile. When a form is opened, it detects each field, understands what is being asked from its label and surrounding context, and fills in the right answer. It handles text inputs, native and custom dropdowns, radio buttons, checkboxes and dates. It also clicks \"+ Add\" buttons to create extra rows for websites, experience and education, and attaches the stored resume to upload fields. Designed with safety and privacy in mind: it never auto-submits a form, never touches password or payment fields, leaves unknown fields blank instead of guessing, and keeps all data stored locally in the browser. Built on Manifest V3 with a review panel, confidence highlighting, undo, and a learning cache that remembers user corrections.",
@@ -1000,10 +1010,10 @@ const AiProjectsShowcase = () => {
         </p>
         <div className="multicolor-line mt-6 mb-12 w-24 mx-auto"></div>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
         {projects.map((project, index) => (
           <Card key={index} className="flex flex-col overflow-hidden bg-card hover:shadow-xl transition-shadow duration-300">
-             <div className="relative h-48 w-full group overflow-hidden">
+             <div className="relative aspect-video w-full group overflow-hidden">
                <Image
                  src={project.imageUrl}
                  alt={project.title}
@@ -1036,7 +1046,7 @@ const AiProjectsShowcase = () => {
                 </div>
             </CardHeader>
             <CardContent className="flex-grow">
-              <CardDescription as="div">
+              <CardDescription>
                 <ReadMore text={project.description} />
               </CardDescription>
             </CardContent>
